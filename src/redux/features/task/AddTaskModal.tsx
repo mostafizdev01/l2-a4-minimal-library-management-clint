@@ -18,33 +18,19 @@ import {
   SelectItem,
   SelectValue,
 } from "@/components/ui/select"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import { cn } from "@/lib/utils"
-import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
-import { Calendar } from "@/components/ui/calendar"
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form"
+import { Plus } from "lucide-react"
 // import { useAppDispatch, useAppSelector } from "@/redux/middlewares/hook"
 // import { addTask } from "./taskSlice"
 import { useState } from "react"
-import { useCreateTaskMutation } from "@/redux/api/baseApi"
+import { Form } from "@/components/ui/form"
+// import { useCreateTaskMutation } from "@/redux/api/baseApi"
 
 
 export default function AddTaskModal() {
   const form = useForm()
   const [open, setOpen] = useState(false)
 
-  const [ createTask, { data, isError, isLoading} ] = useCreateTaskMutation()
+  // const [ createTask, { data, isError, isLoading} ] = useCreateTaskMutation()
 
 
   // const userArr = useAppSelector((state) => state.user.users)
@@ -54,27 +40,27 @@ export default function AddTaskModal() {
   const onSubmit = async (data: any) => {
     console.log({ ...data })
     // disPatch(addTask(data))
-    const taskData = {
-      ...data,
-      isCompleted: false
-    };
-    const res = await createTask(taskData).unwrap() // call createTask function in baseApi
-    console.log("insite submit function", res);
+    // const taskData = {
+    //   ...data,
+    //   isCompleted: false
+    // };
+    // const res = await createTask(taskData).unwrap() // call createTask function in baseApi
+    // console.log("insite submit function", res);
     
     setOpen(false)
     form.reset()
   }
 
-  if(isLoading){
-    return <div>Loading...</div>
-  }
+  // if(isLoading){
+  //   return <div>Loading...</div>
+  // }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className=" text-white" variant="custom">Add Task</Button>
+        <Button className=" text-white cursor-pointer" variant="custom">Add Task <Plus /></Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-[825px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <DialogHeader>
@@ -127,7 +113,7 @@ export default function AddTaskModal() {
             {/* </div> */} 
 
             {/* Date Picker */}
-            <FormField
+            {/* <FormField
               control={form.control}
               name="dueDate"
               render={({ field }) => (
@@ -162,7 +148,7 @@ export default function AddTaskModal() {
                   </Popover>
                 </FormItem>
               )}
-            />
+            /> */}
 
             <DialogFooter>
               <Button className=" mt-3 cursor-pointer" type="submit">Post book</Button>

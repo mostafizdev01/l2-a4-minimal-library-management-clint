@@ -1,16 +1,19 @@
 // import { cn } from "@/lib/utils";
 // import { useAppDispatch, useAppSelector } from "@/redux/middlewares/hook";
-import type { IBook } from "@/types";
-import { Delete, Trash2 } from "lucide-react";
-import { deleteTask } from "./taskSlice";
+import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
+import { BookmarkPlus, SquarePen, Trash2 } from "lucide-react";
+// import type { IBook } from "@/types";
+// import { Trash2 } from "lucide-react";
+// import { deleteTask } from "./taskSlice";
 
-interface IProps {
-    book: IBook
-}
 
-export default function TaskCard({ book }: IProps) {
+export default function TaskCard({ books }) {
 
-    const {id, title, description, author, copies, genre } = book;
+    // const { title, description, author, copies, genre } = book;
+    console.log(books.data);
+
 
     // const disPatch = useAppDispatch()
     // const users = useAppSelector((state) => state.user.users)
@@ -21,50 +24,41 @@ export default function TaskCard({ book }: IProps) {
 
     return (
         <>
-            <div className="border rounded-2xl p-4 flex  justify-between shadow-sm w-full">
-                {/* Left Side */}
-                <div className=" flex  items-center gap-2">
-                    {/* <div className={cn("size-3 rounded-full", {
-                       "bg-green-600" : priority === "high",
-                       "bg-yellow-600" : priority === "medium",
-                       "bg-red-600" : priority === "low",
-                    })}></div> */}
-                    <div className="max-w-sm rounded overflow-hidden shadow-lg">
-                        <div className="px-6 py-4">
-                            <div className="font-bold text-xl mb-2 text-gray-100">{title}</div>
-                            <p className="text-gray-100 text-base mb-2">
-                                <span className="font-semibold">Author:</span> {author}
-                            </p>
-                            <p className="text-gray-100 text-base mb-2">
-                                <span className="font-semibold">Copies Available:</span> {copies}
-                            </p>
-                            <p className="text-gray-100 text-base mb-2">
-                                <span className="font-semibold">Genre:</span> {genre}
-                            </p>
-                            <p className="text-gray-100 text-base text-justify">
-                                <span className="font-semibold">Description:</span> {description}
-                            </p>
-                        </div>
-                        <div className="px-6 pt-4 pb-2">
-                            <span className="inline-block bg-blue-200 rounded-full px-3 py-1 text-sm font-semibold text-blue-800 mr-2 mb-2">#fiction</span>
-                            <span className="inline-block bg-green-200 rounded-full px-3 py-1 text-sm font-semibold text-green-800 mr-2 mb-2">#adventure</span>
-                            <span className="inline-block bg-purple-200 rounded-full px-3 py-1 text-sm font-semibold text-purple-800 mb-2">#classNameic</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Right Side */}
-                <div className="">
-                    {/* <input 
-                        type="checkbox"
-                        className=" cursor-pointer appearance-none w-4 h-4 bg-transparent border border-gray-400 rounded-sm checked:bg-blue-500 checked:border-transparent focus:outline-none"
-                    /> */}
-
-                    <button className="text-red-500 hover:text-red-700 cursor-pointer">
-                        <Trash2 onClick={() => disPatch(deleteTask(id))} />
-                    </button>
-                </div>
-            </div>
+            <Table className=" mt-20">
+                <TableCaption>A list of your recent books.</TableCaption>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead className="w-[100px]">Title</TableHead>
+                        <TableHead>Author</TableHead>
+                        <TableHead>Genre</TableHead>
+                        <TableHead className="text-right">Available</TableHead>
+                        <TableHead className="text-right">Copies</TableHead>
+                        <TableHead className="text-right">ISBN</TableHead>
+                        <TableHead className="text-right">Actions</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {
+                        books?.data?.map((book, index) => 
+                            <TableRow className=" font-semibold" key={index}>
+                                <TableCell className="font-semibold">{book.title}</TableCell>
+                                <TableCell>{book.author}</TableCell>
+                                <TableCell className={cn("font-semibold", {
+                                    "text-blue-500" : book.genre === "SCIENCE",
+                                    "text-cyan-500" : book.genre === "FICTION",
+                                    "text-fuchsia-600" : book.genre === "FANTASY",
+                                    "text-violet-700" : book.genre === "BIOGRAPHY",
+                                })}>{book.genre}</TableCell>
+                                <TableCell className={cn("text-right", book.available === true ? "text-green-500 font-semibold" : "text-red-500 font-bold")}>{String(book?.available)}</TableCell>
+                                <TableCell className="text-right">{book?.copies}</TableCell>
+                                <TableCell className="text-right">{book?.isbn}</TableCell>
+                                <TableCell className="text-right flex justify-between ml-10"><Button className=" cursor-pointer shadow-lime-500 " variant={"secondary"}>Borrow <BookmarkPlus className="  text-lime-500 cursor-pointer" /></Button><SquarePen className="  text-yellow-500 cursor-pointer" /> <Trash2 className="text-red-500 cursor-pointer" /></TableCell>
+                                {/* <TableCell className="text-right text-red-500"><Trash2 /></TableCell> */}
+                            </TableRow>
+                        )
+                    }
+                </TableBody>
+            </Table>
 
         </>
     )
