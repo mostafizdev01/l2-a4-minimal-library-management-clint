@@ -19,37 +19,47 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Plus } from "lucide-react"
-// import { useAppDispatch, useAppSelector } from "@/redux/middlewares/hook"
-// import { addTask } from "./taskSlice"
 import { useState } from "react"
 import { Form } from "@/components/ui/form"
-// import { useCreateTaskMutation } from "@/redux/api/baseApi"
+import { Textarea } from "@/components/ui/textarea"
+// import type { IBook } from "@/types"
+import { useCreateBookMutation } from "@/redux/api/baseApi"
+import { toast } from "react-toastify"
+import type { IBook } from "@/types"
 
 
 export default function AddTaskModal() {
-  const form = useForm()
+  const form = useForm<IBook>()
   const [open, setOpen] = useState(false)
 
-  // const [ createTask, { data, isError, isLoading} ] = useCreateTaskMutation()
+  const [createBook, { isLoading }] = useCreateBookMutation()
 
 
   // const userArr = useAppSelector((state) => state.user.users)
   // console.log(userArr)
   // const disPatch = useAppDispatch();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: IBook) => {
     console.log({ ...data })
     // disPatch(addTask(data))
-    // const taskData = {
-    //   ...data,
-    //   isCompleted: false
-    // };
-    // const res = await createTask(taskData).unwrap() // call createTask function in baseApi
-    // console.log("insite submit function", res);
-    
+    const bookData = {
+      ...data,
+      available: true
+    };
+    const res = await createBook(bookData).unwrap() // call createTask function in baseApi
+    console.log("insite submit function", res);
+    if(res.success){
+      toast.success(res.message)
+    }
+    if(res.success === false){
+      toast.error(res.error.message)
+    }
+    if(res.error){
+      toast.error(res.error.errorResponse.errmsg)
+    }
     setOpen(false)
     form.reset()
   }
+
 
   // if(isLoading){
   //   return <div>Loading...</div>
@@ -58,41 +68,82 @@ export default function AddTaskModal() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className=" text-white cursor-pointer" variant="custom">Add Task <Plus /></Button>
+        <Button className=" text-white cursor-pointer" variant="custom">Add Book <Plus /></Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[825px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <DialogHeader>
-              <DialogTitle>Task</DialogTitle>
+              <DialogTitle>Book Data</DialogTitle>
               <DialogDescription className="sr-only"></DialogDescription>
             </DialogHeader>
 
-            {/* Title */}
-            <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" {...form.register("title")} placeholder="Title" />
+            {/* Title && author */}
+            <div className="grid grid-cols-2 gap-5 mt-10">
+              <div>
+                <Label className=" mb-3" htmlFor="title">Title</Label>
+                <Input id="title" {...form.register("title",
+                  {
+                    required: "title is required"
+                  }
+                )} placeholder="Title" />
+
+
+              </div>
+              <div>
+                <Label className=" mb-3" htmlFor="title">Author</Label>
+                <Input id="title" {...form.register("author",
+                  {
+                    required: "title is required"
+                  }
+
+                )} placeholder="Author name" />
+              </div>
             </div>
+
+            {/* Priority && isbn*/}
+            <div className="grid grid-cols-2 gap-5 mt-10">
+              <div>
+                <Label className=" mb-3">Genre</Label>
+                <Select onValueChange={(value) => form.setValue("genre", value
+                )}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select Genre" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="FICTION">FICTION</SelectItem>
+                    <SelectItem value="NON_FICTION">NON_FICTION</SelectItem>
+                    <SelectItem value="SCIENCE">SCIENCE</SelectItem>
+                    <SelectItem value="HISTORY">HISTORY</SelectItem>
+                    <SelectItem value="BIOGRAPHY">BIOGRAPHY</SelectItem>
+                    <SelectItem value="FANTASY">FANTASY</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div>
+                <Label className=" mb-3" htmlFor="title">ISBN</Label>
+                <Input id="title" {...form.register("isbn",
+                  {
+                    required: "title is required",
+                  })} placeholder="Isbn" />
+              </div>
+            </div>
+
+            {/* Copies */}
+            <div className="grid gap-2">
+              <Label htmlFor="copies">Copies</Label>
+              <Input type="number" id="copies" {...form.register("copies", { valueAsNumber: true, required: "isbn is required" })} placeholder="Copies" />
+            </div>
+
 
             {/* Description */}
             <div className="grid gap-2">
               <Label htmlFor="description">Description</Label>
-              <Input id="description" {...form.register("description")} placeholder="Description" />
-            </div>
-
-            {/* Priority Select */}
-            <div className="grid gap-2">
-              <Label>Priority</Label>
-              <Select onValueChange={(value) => form.setValue("priority", value)}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Select priority" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="low">Low</SelectItem>
-                  <SelectItem value="medium">Medium</SelectItem>
-                  <SelectItem value="high">High</SelectItem>
-                </SelectContent>
-              </Select>
+              <Textarea id="description" {...form.register("description",
+                {
+                  required: "Description is required"
+                }
+              )} placeholder="Description" />
             </div>
 
             {/* user Select */}
@@ -108,9 +159,9 @@ export default function AddTaskModal() {
                   {/* {
                     userArr.map((user) => <SelectItem key={user.id} value={user.id}>{user.name}</SelectItem>)
                   } */}
-                {/* </SelectContent> */}
-              {/* </Select> */}
-            {/* </div> */} 
+            {/* </SelectContent> */}
+            {/* </Select> */}
+            {/* </div> */}
 
             {/* Date Picker */}
             {/* <FormField
@@ -151,7 +202,7 @@ export default function AddTaskModal() {
             /> */}
 
             <DialogFooter>
-              <Button className=" mt-3 cursor-pointer" type="submit">Post book</Button>
+              <Button className=" mt-3 cursor-pointer" type="submit">{isLoading === true ? "Posting..." : "Post book"}</Button>
             </DialogFooter>
           </form>
         </Form>

@@ -1,4 +1,6 @@
 import App from "@/App";
+import GetSingleBook from "@/redux/features/task/getSingleBook";
+import TaskCard from "@/redux/features/task/taskCard";
 import { createBrowserRouter } from "react-router";
 
 export const router = createBrowserRouter([
@@ -7,8 +9,8 @@ export const router = createBrowserRouter([
         element: <App />,
         children: [
             {
-                path: "/about",
-                element: <div>Well to About page</div>,
+                index: true,
+                element: <TaskCard />,
                 // or ther way routing setup..
                 // default routs..
                 // {index: true, Component: <App />}
@@ -16,8 +18,16 @@ export const router = createBrowserRouter([
                 // {path: "about", Component: <App />}
             },
             {
+                path: "/about",
+                element: <TaskCard />,
+            },
+            {
                 path: "/service",
                 element: <div>Well to service page</div>,
+            },
+            {
+                path: "/singlebook/:id",
+                element: <GetSingleBook />,
             },
             {
                 path: "/portfolio",

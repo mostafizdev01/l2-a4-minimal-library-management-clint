@@ -7,9 +7,11 @@ import { router } from './routes/router.tsx'
 import { ThemeProvider } from './darkMode/theme-provider.tsx'
 import { Provider } from 'react-redux'
 import { store } from './redux/middlewares/store.ts'
+import { ToastContainer } from 'react-toastify';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
+    <ToastContainer />
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Provider store={store}>
         <RouterProvider router={router}>
