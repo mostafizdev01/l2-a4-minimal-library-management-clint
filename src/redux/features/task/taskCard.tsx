@@ -1,15 +1,15 @@
-// import { cn } from "@/lib/utils";
-// import { useAppDispatch, useAppSelector } from "@/redux/middlewares/hook";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useDeleteSingleBookMutation, useGetBooksQuery } from "@/redux/api/baseApi";
-import { ArrowRight, BookmarkPlus, SquarePen, Trash2 } from "lucide-react";
+import { ArrowRight, Trash2 } from "lucide-react";
 import type { IBook } from "@/types";
 import { Link } from "react-router";
 import AddTaskModal from "./AddTaskModal";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "react-toastify";
+import UpdateBookModal from "./updateBookModal";
+import AddBorrowModal from "../borrow/AddBorrowModal";
 
 // import type { IBook } from "@/types";
 // import { Trash2 } from "lucide-react";
@@ -28,10 +28,6 @@ export default function TaskCard() {
     if (isLoading) {
         return <div>Loading...</div>
     }
-
-    //// update book
-
-    
 
     // delete book functionality
     const handleDelete = async (id: string) => {
@@ -103,11 +99,11 @@ export default function TaskCard() {
                                 <TableCell className="text-right">{book?.copies}</TableCell>
                                 <TableCell className="text-right">{book?.isbn}</TableCell>
                                 <TableCell className="text-right flex justify-between ml-10">
-                                    <Button disabled={book?.copies === 0 || book?.copies < 0} className=" cursor-pointer shadow-lime-500 " variant={"secondary"}>Borrow <BookmarkPlus className="  text-lime-500 cursor-pointer" /></Button>
+                                    <AddBorrowModal book={book.copies} />
                                     <Link to={`/singlebook/${book._id}`}>
                                         <Button className=" cursor-pointer shadow-blue-500 " variant={"secondary"}>View book <ArrowRight className="  text-blue-500 cursor-pointer" /></Button>
                                     </Link>
-                                    <SquarePen className="  text-yellow-500 cursor-pointer" />
+                                    <UpdateBookModal id={book._id} />
                                     <Trash2 onClick={()=> handleDelete(book._id)} className="text-red-500 cursor-pointer" />
                                 </TableCell>
                                 {/* <TableCell className="text-right text-red-500"><Trash2 /></TableCell> */}

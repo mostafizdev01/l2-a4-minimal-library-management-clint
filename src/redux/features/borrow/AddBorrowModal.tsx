@@ -14,43 +14,41 @@ import { Label } from "@/components/ui/label"
 import {
   Form,
 } from "@/components/ui/form"
-import { useDispatch } from "react-redux"
-import { addUser } from "./userSlice"
-// import { useAppDispatch } from "@/redux/middlewares/hook"
-// import { useAppDispatch } from "@/redux/middlewares/hook"
-// import { addTask } from "./taskSlice"
+import { BookmarkPlus } from "lucide-react"
 
-export default function AddUserModal() {
+interface borrowProps {
+  book: number
+}
+
+export default function AddBorrowModal({book}: borrowProps) {
   const form = useForm()
-
-    const disPatch = useDispatch();
 
   //   eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onSubmit = (data: any) => {
     console.log(data)
-    disPatch(addUser(data))
+    // disPatch(addUser(data))
   }
 
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="destructive">Add User</Button>
+        <Button disabled={book === 0 || book < 0} className=" cursor-pointer shadow-lime-500 " variant={"secondary"}>Borrow <BookmarkPlus className="  text-lime-500 cursor-pointer" /></Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <DialogHeader>
-              <DialogTitle>Task</DialogTitle>
+              <DialogTitle>Borrow Data</DialogTitle>
               <DialogDescription className="sr-only"></DialogDescription>
             </DialogHeader>
 
             {/* Title */}
-            <div className="grid gap-2">
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" {...form.register("name")} placeholder="Enter your name" />
+            <div className="grid gap-2 mt-5">
+              <Label htmlFor="title">Quantity</Label>
+              <Input type="number" id="title" {...form.register("name")} placeholder="Quantity" />
             </div>
             <DialogFooter>
-              <Button type="submit">Save changes</Button>
+              <Button type="submit">Save borrow</Button>
             </DialogFooter>
           </form>
         </Form>
