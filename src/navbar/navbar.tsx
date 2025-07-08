@@ -1,8 +1,8 @@
 import { Button } from "@/components/ui/button"
 import { Menu, X } from "lucide-react"
 import { Link } from "react-router"
-import { ModeToggle } from "../mode-toggle"
 import { useState } from "react"
+import { ModeToggle } from "@/components/ui/mode-toggle"
 
 
 export default function Navbar() {
@@ -36,13 +36,13 @@ export default function Navbar() {
                                     Home
                                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
                                 </Link>
-                                <Link to={'/about'}
+                                <Link to={'/books'}
                                     className="text-gray-600 dark:text-white hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
                                 >
                                     Books
                                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
                                 </Link>
-                                <Link to={'/service'}
+                                <Link to={'/borrow'}
                                     className="text-gray-600 dark:text-white hover:text-blue-600 px-3 py-2 text-sm font-medium transition-colors duration-200 relative group"
                                 >
                                     Borrow

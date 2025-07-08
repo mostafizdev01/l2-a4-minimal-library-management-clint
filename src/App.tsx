@@ -1,6 +1,6 @@
 import { Outlet } from "react-router"
-import Navbar from "./components/ui/navbar/navbar"
-import Footer from "./components/ui/pages/footer.js";
+import Footer from "./pages/footer.js";
+import Navbar from "./navbar/navbar.js";
 
 export default function App() {
   // const tasks = useAppSelector(selectTask)

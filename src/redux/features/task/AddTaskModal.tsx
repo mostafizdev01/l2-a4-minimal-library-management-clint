@@ -34,10 +34,7 @@ export default function AddTaskModal() {
 
   const [createBook, { isLoading }] = useCreateBookMutation()
 
-
-  // const userArr = useAppSelector((state) => state.user.users)
-  // console.log(userArr)
-  // const disPatch = useAppDispatch();
+  
   const onSubmit = async (data: IBook) => {
     console.log({ ...data })
     // disPatch(addTask(data))

@@ -1,4 +1,5 @@
 import App from "@/App";
+import BorrowData from "@/redux/features/borrow/borrowData";
 import GetSingleBook from "@/redux/features/task/getSingleBook";
 import TaskCard from "@/redux/features/task/taskCard";
 import { createBrowserRouter } from "react-router";
@@ -18,12 +19,12 @@ export const router = createBrowserRouter([
                 // {path: "about", Component: <App />}
             },
             {
-                path: "/about",
+                path: "/books",
                 element: <TaskCard />,
             },
             {
-                path: "/service",
-                element: <div>Well to service page</div>,
+                path: "/borrow",
+                element: <BorrowData />,
             },
             {
                 path: "/singlebook/:id",
