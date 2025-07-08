@@ -12,5 +12,5 @@ export interface IBook {
 export interface IBorrow { 
     id: string,
     quantity: number,
-    date: Date
+    date: Date,
 }

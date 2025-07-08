@@ -1,9 +1,5 @@
 # 📚 Minimal Library Management System
 
-A clean and minimal Library Management System built with **React**, **Redux Toolkit Query (RTK Query)**, **TypeScript**, and **Tailwind CSS**. Users can manage books, perform borrow operations, and view borrowing summaries — all without authentication or payment integration.
-
----
-
 ## 🚀 Project Overview
 
 This system demonstrates a fully functional client-side app that communicates with a RESTful API using RTK Query. It supports:
