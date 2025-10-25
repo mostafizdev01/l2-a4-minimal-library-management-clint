@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form"
 import {
   Dialog,
+  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -17,7 +18,7 @@ import {
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
+import { BookmarkPlus, CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import {
   Form,
@@ -38,8 +39,6 @@ interface borrowProps {
 }
 
 export default function AddBorrowModal({ bookData }: borrowProps) {
-  
-  console.log(bookData);
   const [copies, id] = bookData
   const form = useForm<IBorrow>()
   const [open, setOpen] = useState(false)
@@ -54,27 +53,36 @@ export default function AddBorrowModal({ bookData }: borrowProps) {
       book: id
     };
 
-    const res = await createBorrow(borrowData).unwrap() // call createBorrow function in baseApi
-    console.log(res);
-    
-    if (res.success) {
-      form.reset()
-      setOpen(false)
-      toast.success(res.message)
-      refetch();
+    if (copies < data?.quantity) {
+      toast.error("Copies not avalible")
+      return
+    }
+
+    try {
+      const res = await createBorrow(borrowData).unwrap() // call createBorrow function in baseApi
+      if (res.success) {
+        form.reset()
+        setOpen(false)
+        toast.success(res.message)
+        refetch();
+      }
+    } catch (error) {
+      console.log(error)
     }
 
   }
 
-  // if (isLoading) {
-  //   return <div>Loading...</div>
-  // }
+  if (isLoading) {
+    return <div>Loading...</div>
+  }
+
+
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {/* <DialogTrigger asChild>
+      <DialogTrigger asChild>
         <Button disabled={copies === 0 || copies < 0} className=" cursor-pointer shadow-lime-500 " variant={"secondary"}>Borrow <BookmarkPlus className="  text-lime-500 cursor-pointer" /></Button>
-      </DialogTrigger> */}
+      </DialogTrigger>
 
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
@@ -88,13 +96,14 @@ export default function AddBorrowModal({ bookData }: borrowProps) {
             {/* quantity */}
             <div className="grid gap-2 mt-8">
               <Label htmlFor="quantity">Quantity</Label>
-              <Input type="number" id="quantity" {...form.register("quantity")} placeholder="quantity" />
+              <Input required type="number" id="quantity" {...form.register("quantity")} placeholder="quantity" />
             </div>
 
             {/* Date Picker */}
             <FormField
               control={form.control}
-              name="quantity"
+              rules={{ required: "Due date is required" }}
+              name="dueDate"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Due Date</FormLabel>
@@ -115,7 +124,7 @@ export default function AddBorrowModal({ bookData }: borrowProps) {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        // selected={field.value}
+                        selected={field.value}
                         onSelect={field.onChange}
                         // disabled={(date) =>
                         //   date > new Date() || date < new Date("1900-01-01")

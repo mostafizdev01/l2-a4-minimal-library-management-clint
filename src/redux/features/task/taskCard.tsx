@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useDeleteSingleBookMutation, useGetBooksQuery } from "@/redux/api/baseApi";
-import { ArrowRight, BookmarkPlus, Trash2 } from "lucide-react";
+import { ArrowRight, Trash2 } from "lucide-react";
 import type { IBook } from "@/types";
 import { Link } from "react-router";
 import AddTaskModal from "./AddTaskModal";
@@ -10,8 +10,6 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "react-toastify";
 import UpdateBookModal from "./updateBookModal";
 import AddBorrowModal from "../borrow/AddBorrowModal";
-import { PaginationDemo } from "@/components/pagination/Pagination";
-import { useState, type SetStateAction } from "react";
 
 // import type { IBook } from "@/types";
 // import { Trash2 } from "lucide-react";
@@ -23,20 +21,12 @@ export default function TaskCard() {
 
     const { data, isLoading } = useGetBooksQuery(undefined)
     const [ deleteSingleBook ] = useDeleteSingleBookMutation();
-    const [ bookCopies, setBookCopies] = useState(null)
-    const [ isOpen, setIsOpen] = useState(false)
- 
+
     const books = data ?? [];
 
 
     if (isLoading) {
         return <div>Loading...</div>
-    }
-
-    const handleBorrow = (book: SetStateAction<null> | IBook)=>{
-        setBookCopies(book)
-        setIsOpen(true)
-        console.log(isOpen);
     }
 
     // delete book functionality
@@ -77,7 +67,7 @@ export default function TaskCard() {
             </div>
 
             <Table className=" mt-15">
-                <TableCaption><PaginationDemo /></TableCaption>
+                <TableCaption>A list of your recent books.</TableCaption>
                 <TableHeader className=" bg-slate-800">
                     <TableRow>
                         <TableHead className="w-[100px]">Title</TableHead>
@@ -107,12 +97,7 @@ export default function TaskCard() {
                                 <TableCell className="text-right">{book?.copies}</TableCell>
                                 <TableCell className="text-right">{book?.isbn}</TableCell>
                                 <TableCell className="text-right flex justify-between ml-10">
-                                    <Button onClick={()=> handleBorrow(book)} disabled={book?.copies === 0 || book?.copies < 0} className=" cursor-pointer shadow-lime-500 " variant={"secondary"}>Borrow <BookmarkPlus className="  text-lime-500 cursor-pointer" /></Button>
-                                    {
-                                        isOpen && (
-                                            <AddBorrowModal bookData={[bookCopies.copies, bookCopies._id]} />
-                                        )
-                                    }
+                                    <AddBorrowModal bookData={[book.copies, book._id]} />
                                     <Link to={`/singlebook/${book._id}`}>
                                         <Button className=" cursor-pointer shadow-blue-500 " variant={"secondary"}>View book <ArrowRight className="  text-blue-500 cursor-pointer" /></Button>
                                     </Link>
