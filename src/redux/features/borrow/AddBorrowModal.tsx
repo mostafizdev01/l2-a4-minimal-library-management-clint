@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form"
 import {
   Dialog,
-  DialogTrigger,
   DialogContent,
   DialogHeader,
   DialogTitle,
@@ -18,7 +17,7 @@ import {
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
-import { BookmarkPlus, CalendarIcon } from "lucide-react"
+import { CalendarIcon } from "lucide-react"
 import { Calendar } from "@/components/ui/calendar"
 import {
   Form,
@@ -39,6 +38,8 @@ interface borrowProps {
 }
 
 export default function AddBorrowModal({ bookData }: borrowProps) {
+  
+  console.log(bookData);
   const [copies, id] = bookData
   const form = useForm<IBorrow>()
   const [open, setOpen] = useState(false)
@@ -54,6 +55,8 @@ export default function AddBorrowModal({ bookData }: borrowProps) {
     };
 
     const res = await createBorrow(borrowData).unwrap() // call createBorrow function in baseApi
+    console.log(res);
+    
     if (res.success) {
       form.reset()
       setOpen(false)
@@ -69,9 +72,9 @@ export default function AddBorrowModal({ bookData }: borrowProps) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
+      {/* <DialogTrigger asChild>
         <Button disabled={copies === 0 || copies < 0} className=" cursor-pointer shadow-lime-500 " variant={"secondary"}>Borrow <BookmarkPlus className="  text-lime-500 cursor-pointer" /></Button>
-      </DialogTrigger>
+      </DialogTrigger> */}
 
       <DialogContent className="sm:max-w-[425px]">
         <Form {...form}>
@@ -91,7 +94,7 @@ export default function AddBorrowModal({ bookData }: borrowProps) {
             {/* Date Picker */}
             <FormField
               control={form.control}
-              name="dueDate"
+              name="quantity"
               render={({ field }) => (
                 <FormItem className="flex flex-col">
                   <FormLabel>Due Date</FormLabel>
@@ -112,7 +115,7 @@ export default function AddBorrowModal({ bookData }: borrowProps) {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={field.value}
+                        // selected={field.value}
                         onSelect={field.onChange}
                         // disabled={(date) =>
                         //   date > new Date() || date < new Date("1900-01-01")
