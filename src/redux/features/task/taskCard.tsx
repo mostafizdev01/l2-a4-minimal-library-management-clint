@@ -143,7 +143,7 @@ export default function TaskCard() {
                                 <TableCell className="text-right">{book?.copies}</TableCell>
                                 <TableCell className="text-right">{book?.isbn}</TableCell>
                                 <TableCell className="text-right flex justify-between ml-10">
-                                    <AddBorrowModal bookData={[book.copies, book._id]} />
+                                    <AddBorrowModal bookData={[book.copies, book._id, new Date(), undefined]} />
                                     <Link to={`/singlebook/${book._id}`}>
                                         <Button className=" cursor-pointer shadow-blue-500 " variant={"secondary"}>View book <ArrowRight className="  text-blue-500 cursor-pointer" /></Button>
                                     </Link>

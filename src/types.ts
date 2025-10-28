@@ -13,4 +13,5 @@ export interface IBorrow {
     id: string,
     quantity: number,
     date: Date,
+    dueDate: string
 }

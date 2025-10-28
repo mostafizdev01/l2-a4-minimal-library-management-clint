@@ -1,4 +1,4 @@
-import { PaginationDemo } from "@/components/pagination/Pagination";
+
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useGetBorrowQuery } from "@/redux/api/baseApi"
 
@@ -19,7 +19,7 @@ export default function BorrowData() {
     return (
         <>
             <Table className=" mt-15 w-7xl mx-auto">
-                <TableCaption><PaginationDemo /></TableCaption>
+                <TableCaption></TableCaption>
                 <TableHeader className=" bg-slate-800">
                     <TableRow>
                         <TableHead className="">TotalQuantity</TableHead>

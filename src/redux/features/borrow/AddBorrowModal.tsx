@@ -35,7 +35,7 @@ import { useCreateBorrowMutation, useGetSingleBookQuery } from "@/redux/api/base
 import { toast } from "react-toastify"
 
 interface borrowProps {
-  bookData: [number, string]
+  bookData: [number, string, Date, undefined]
 }
 
 export default function AddBorrowModal({ bookData }: borrowProps) {
@@ -124,7 +124,7 @@ export default function AddBorrowModal({ bookData }: borrowProps) {
                     <PopoverContent className="w-auto p-0" align="start">
                       <Calendar
                         mode="single"
-                        selected={field.value}
+                        selected={new Date(field.value)}
                         onSelect={field.onChange}
                         // disabled={(date) =>
                         //   date > new Date() || date < new Date("1900-01-01")
