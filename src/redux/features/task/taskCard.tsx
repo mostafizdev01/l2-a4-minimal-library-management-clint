@@ -7,9 +7,12 @@ import type { IBook } from "@/types";
 import { Link } from "react-router";
 import AddTaskModal from "./AddTaskModal";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import UpdateBookModal from "./updateBookModal";
 import AddBorrowModal from "../borrow/AddBorrowModal";
+import { PaginationDemo } from "@/components/pagination/Pagination";
+import { toast } from "sonner";
+import { useState } from "react";
 
 // import type { IBook } from "@/types";
 // import { Trash2 } from "lucide-react";
@@ -18,32 +21,69 @@ import AddBorrowModal from "../borrow/AddBorrowModal";
 
 
 export default function TaskCard() {
+    const [page, setPage] = useState(1)
+    const limit = 4;
+    const { data, isLoading } = useGetBooksQuery({page, limit})
+    const [deleteSingleBook] = useDeleteSingleBookMutation();
 
-    const { data, isLoading } = useGetBooksQuery(undefined)
-    const [ deleteSingleBook ] = useDeleteSingleBookMutation();
-
+    
     const books = data ?? [];
-
-
+    const totalPage = data?.totalPage || 1;
+    
+    
     if (isLoading) {
         return <div>Loading...</div>
     }
 
-    // delete book functionality
-    const handleDelete = async (id: string) => {
-        try{
-          const res = await deleteSingleBook(id).unwrap();
-          if(res.success){
-            toast.success(res.message)
-          }
-          
-        }
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        catch(error: any){
-            const errorMessage = error?.data?.message || "Something went wrong while deleting.";
-            toast.error(errorMessage)
-        }
-    }
+
+    const handleDeleteConfirm = (id: string) => {
+        toast.info(
+            <div className="p-2">
+                <p className="text-lg font-semibold text-gray-800 mb-3">
+                    🗑️ Are you sure you want to delete this book?
+                </p>
+
+                <div className="flex justify-end gap-3 mt-3">
+                    <button
+                        onClick={async () => {
+                            try {
+                                const res = await deleteSingleBook(id).unwrap();
+                                if (res.success) {
+                                    toast.dismiss(); // hide confirm toast
+                                    toast.success(res.message, {
+                                        position: "top-center",
+                                    });
+                                }
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                            } catch (error: any) {
+                                const errorMessage =
+                                    error?.data?.message ||
+                                    "Something went wrong while deleting.";
+                                toast.dismiss();
+                                toast.error(errorMessage, {
+                                    position: "top-center",
+                                });
+                            }
+                        }}
+                        className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg shadow-md transition-all duration-200"
+                    >
+                        Yes, Delete
+                    </button>
+
+                    <button
+                        onClick={() => toast.dismiss()}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg shadow-sm transition-all duration-200"
+                    >
+                        Cancel
+                    </button>
+                </div>
+            </div>,
+            {
+                position: "top-center",
+                className: "rounded-xl shadow-lg border border-gray-200",
+            }
+        );
+    };
 
     return (
         <>
@@ -67,7 +107,13 @@ export default function TaskCard() {
             </div>
 
             <Table className=" mt-15">
-                <TableCaption>A list of your recent books.</TableCaption>
+                <TableCaption><PaginationDemo
+                 currentPage={page}
+                 totalPages={totalPage}
+                 paginationFunc={setPage} 
+                 />
+                 
+                 </TableCaption>
                 <TableHeader className=" bg-slate-800">
                     <TableRow>
                         <TableHead className="w-[100px]">Title</TableHead>
@@ -102,7 +148,7 @@ export default function TaskCard() {
                                         <Button className=" cursor-pointer shadow-blue-500 " variant={"secondary"}>View book <ArrowRight className="  text-blue-500 cursor-pointer" /></Button>
                                     </Link>
                                     <UpdateBookModal id={book._id} />
-                                    <Trash2 onClick={()=> handleDelete(book._id)} className="text-red-500 cursor-pointer" />
+                                    <Trash2 onClick={() => handleDeleteConfirm(book._id)} className="text-red-500 cursor-pointer" />
                                 </TableCell>
                                 {/* <TableCell className="text-right text-red-500"><Trash2 /></TableCell> */}
                             </TableRow>

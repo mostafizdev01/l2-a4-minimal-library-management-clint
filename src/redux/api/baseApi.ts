@@ -6,7 +6,7 @@ export const baseApi = createApi({
     tagTypes: ["book", "borrow"],  /// tagTypes handle the cache data.
     endpoints: (builder) => ({
         getBooks: builder.query({
-            query: () => "/books",
+            query: ({page, limit}) => `/books?page=${page}&limit=${limit}`,
             providesTags: ["book"]
         }),
         getSingleBook: builder.query({
