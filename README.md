@@ -27,7 +27,7 @@ All operations are public, lightweight, and optimized for speed and simplicity.
   - 📥 Borrow Book (form modal)
 - **Add Book**:
   - Form with title, author, genre, ISBN, description, copies
-  - Redirects to book list and auto updates on submit
+  - Redirects to books list and auto updates on submit
 - **Business Logic**:
   - Copies set to 0 → auto marks book as unavailable
 
